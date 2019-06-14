@@ -1,0 +1,12 @@
+logging/
+logging/*
+.idea/
+.idea/*
+config/*
+!config/config_sample.yml
+functions/__pycache__/
+functions/__pycache__/*
+.c9/
+.c9/*
+venv/
+venv/*

@@ -7,26 +7,35 @@ from pathlib import Path
 from github import Github
 from functions.readConfig import readConfig
 
-# this part is for error logging purposes
-now = datetime.now()
-today = "{}-{}-{}".format(now.year, now.month, now.day)
-sf = os.path.dirname(os.path.realpath(__file__))
-folder = os.path.join(sf, 'logging')
-log_file = os.path.join(folder, "{}.log".format(today))
+if __name__ == '__main__':
+    log_format = "%(asctime)s [%(levelname)8s] --- %(filename)10s :: %(lineno)3d :: %(message)s"
+    logger = logging.getLogger("DEBUG LOGGER")
 
-os.makedirs(folder, exist_ok=True)
-logging.basicConfig(filename=log_file, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    level=logging.DEBUG)
+    # To override the default severity of logging
+    logger.setLevel('DEBUG')
+
+    # Use FileHandler() to log to a file
+    file_handler = logging.StreamHandler()
+    formatter = logging.Formatter(log_format, "%Y-%m-%d %H:%M:%S")
+    file_handler.setFormatter(formatter)
+
+    # Don't forget to add the file handler
+    logger.addHandler(file_handler)
+else:
+    logger = logging.getLogger("DEBUG LOGGER")
 
 
 class Create:
     def __init__(self):
         try:
-            cf = readConfig("config/config.yml")
-
-            self.GitHub_Token = cf.config['github_token']
-            self.projects_folder_name = cf.config['projects_folder_name']
-            self.license_template = cf.config['license_template']
+            config_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config', 'config.yml')
+            cf = readConfig(config_file)
+            try:
+                self.GitHub_Token = cf.config['github_token']
+                self.projects_folder_name = cf.config['projects_folder_name']
+                self.license_template = cf.config['license_template']
+            except KeyError as e:
+                raise Exception(f"Config file broken {e}")
 
             yn = ['y', 'n']
             checkers = [None, ""]
@@ -35,6 +44,7 @@ class Create:
 
             if self.GitHub_Token is None or self.GitHub_Token == '':
                 raise Exception("No GitHub Token")
+
             home_folder = str(Path.home())  # this is the users home folder on any OS
             self.project_folder = os.path.join(home_folder, self.projects_folder_name)
 
@@ -84,10 +94,7 @@ class Create:
                 self.clone_git_repository()
 
         except Exception as e:
-            print(e)
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            f_name = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            logging.warning(str(e) + " | " + str(exc_type) + " | " + str(f_name) + " | " + str(exc_tb.tb_lineno))
+            logger.warning(e)
             return
 
     def create_git_repository(self):
@@ -105,9 +112,7 @@ class Create:
 
             return True
         except Exception as e:
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            f_name = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            logging.warning(str(e) + " | " + str(exc_type) + " | " + str(f_name) + " | " + str(exc_tb.tb_lineno))
+            logger.warning(e)
             return False
 
     def clone_git_repository(self):
@@ -121,10 +126,7 @@ class Create:
             os.system(clone)  # Cloning
 
         except Exception as e:
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            f_name = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            logging.warning(str(e) + " | " + str(exc_type) + " | " + str(f_name) + " | " + str(exc_tb.tb_lineno))
-            return
+            logger.warning(e)
 
 
 if __name__ == "__main__":

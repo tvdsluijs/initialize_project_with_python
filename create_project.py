@@ -6,6 +6,9 @@ from pathlib import Path
 
 from github import Github
 from functions.readConfig import readConfig
+from functions.create_gitignore import CreateGitignore
+from functions.create_readme import CreateReadme
+
 
 if __name__ == '__main__':
     log_format = "%(asctime)s [%(levelname)8s] --- %(filename)10s :: %(lineno)3d :: %(message)s"
@@ -27,6 +30,9 @@ else:
 
 class Create:
     def __init__(self):
+
+        self.gitignore_start_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'start_files', "gitignore.txt")
+        self.readme_start_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'start_files', "readme.txt")
         try:
             config_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config', 'config.yml')
             cf = readConfig(config_file)
@@ -34,6 +40,8 @@ class Create:
                 self.GitHub_Token = cf.config['github_token']
                 self.projects_folder_name = cf.config['projects_folder_name']
                 self.license_template = cf.config['license_template']
+                self.twitter = cf.config['twitter']
+                self.email = cf.config['email']
             except KeyError as e:
                 raise Exception(f"Config file broken {e}")
 
@@ -41,6 +49,7 @@ class Create:
             checkers = [None, ""]
             correct = 1
             self.repo = None
+            self.user = None
 
             if self.GitHub_Token is None or self.GitHub_Token == '':
                 raise Exception("No GitHub Token")
@@ -91,17 +100,34 @@ class Create:
                                       "(you can change it later) ")
 
             if self.create_git_repository():
-                self.clone_git_repository()
+                if self.clone_git_repository():
+                    self.create_extra_files()
 
         except Exception as e:
             logger.warning(e)
             return
 
+    def create_extra_files(self):
+        new_file = os.path.join(self.project_folder, self.repo.name, ".gitignore")
+        cg = CreateGitignore(new_file=new_file, start_file=self.gitignore_start_file)
+        cg.create()
+        cg.write_file()
+
+        my_new_file = os.path.join(self.project_folder, self.repo.name, "README.md")
+        cr = CreateReadme(project_name=self.project_name, descr=self.description,
+                          github_username=self.repo.owner.login,
+                          repo=self.repo.name,
+                          readme_file= my_new_file,
+                          example_readme=self.readme_start_file,
+                          twitter=self.twitter,
+                          email=self.email)
+        cr.gogo_gadget()
+
     def create_git_repository(self):
         try:
-            user = Github(self.GitHub_Token).get_user()
+            self.user = Github(self.GitHub_Token).get_user()
 
-            self.repo = user.create_repo(
+            self.repo = self.user.create_repo(
                 self.project_name,
                 auto_init=self.auto_init,
                 homepage=self.homepage,
@@ -124,10 +150,16 @@ class Create:
             clone = "git clone {}".format(self.repo.ssh_url)
             os.chdir(self.project_folder)  # Specifying the path where the cloned project needs to be copied
             os.system(clone)  # Cloning
+            return True
 
         except Exception as e:
             logger.warning(e)
+            return False
 
 
 if __name__ == "__main__":
     c = Create()
+
+# https://github.com/github/gitignore
+
+

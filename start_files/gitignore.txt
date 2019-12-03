@@ -1,0 +1,12 @@
+# My Config folder
+config/*
+!config/config_sample.yml
+
+# My logging folder
+logging/
+logging/*
+
+# Covers JetBrains IDEs: PyCharm and Webstorm
+.idea/
+.idea/*
+

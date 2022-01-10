@@ -1,13 +1,11 @@
-
-
 ### PyCharm ###
 # Covers JetBrains IDEs: PyCharm and Webstorm
 .idea/
 .idea/*
 
 # My Config folder
-config/*
-!config/config_sample.yml
+config.ini
+!config_sample.ini
 
 # My logging folder
 logging/

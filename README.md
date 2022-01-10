@@ -7,15 +7,17 @@ Small python script to automate the creation of a project in GitHub and your har
 ```bash
 git clone git@github.com:tvdsluijs/initialize_project_with_python.git
 cd initialize_project_with_python
+python -m venv .venv # if you want to put it within an environment
+source .venv/bin/activate # if you want to activate the environment
 pip install -r requirements.txt
 source ~/.my_commands.sh
 ```
 
-Create a Github [token](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line) 
+Create a Github [token](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line)
 
 Then go to the folder config and set the 3 variables in a `config.yml` file
 - github_token              = Your Github token
-- projects_folder_name      = where your projects folder is
+- projects_folder_name      = where your projects folder is c:/projectsfolder or /users/username/projectsfolder
 - license_template          = Pick a for you appropriate license
 
 Done!
@@ -24,7 +26,7 @@ Done!
 Well you can read all about it in my blogpost.
 
 ## Build status
-Build status is ready! 
+Build status is ready!
 
 [![Build Status](https://img.shields.io/badge/Build-Ready-Green.svg)]()
 
@@ -40,7 +42,6 @@ Build status is ready!
 
 - PyGithub
 - pathlib
-- PyYAML
 
 It's all in the requirements.txt so when you clone this repository and fire the following command all be good!
 

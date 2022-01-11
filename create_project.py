@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import os
 import sys
 import configparser
@@ -14,8 +16,8 @@ class CreateProject:
         try:
             self.gitignore_start_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'start_files', "gitignore.txt")
             self.readme_start_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'start_files', "readme.txt")
-
-            self.config_file = './config.ini'
+            self.dir_path = os.path.dirname(os.path.realpath(__file__))
+            self.config_file = os.path.join(self.dir_path, './config.ini')
             self.config = None
             self.read_config()
 

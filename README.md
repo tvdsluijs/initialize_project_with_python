@@ -22,6 +22,24 @@ Then go to the folder config and set the 3 variables in a `config.yml` file
 
 Done!
 
+If you want to use this script anywhere on your Mac place the create_project.sh in a global folder
+Something like ~/myscripts
+
+Then
+In your .zshrc or bash profile you have to add a Export line
+Do
+
+`nano ~/.zshrc`
+
+or when using Bash
+
+`nano ~/.bash_profile`
+
+add this line at the end of the file with the correct path to this script
+
+`export PATH=~/MyBashScripts/all_scripts:$PATH`
+
+
 ## Why did I build this
 Well you can read all about it in my blogpost.
 
@@ -50,19 +68,9 @@ It's all in the requirements.txt so when you clone this repository and fire the 
 
 ## Help
 
-Are you in need of help? Open slack and go to:
-
-https://pure-python.slack.com
-
 You will find more about this project in:
 
 [#Initialize Projects](https://pure-python.slack.com/messages/CKKFAGFCM)
-
-
-<!-- ACKNOWLEDGEMENTS -->
-## Acknowledgements
-
-* [awesome-readme](https://github.com/othneildrew/Best-README-Template)
 
 
 ## License

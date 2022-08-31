@@ -12,6 +12,6 @@
 DIR=~/MyPythonProjects/initialize_project_with_python
 
 # Leave this part be!
-source $DIR/.venv/bin/activate
+source $DIR/.env/bin/activate
 # virtualenv is now active.
 python $DIR/create_project.py

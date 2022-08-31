@@ -2,7 +2,6 @@ certifi
 chardet
 Deprecated
 idna
-pathlib
 PyGithub
 PyJWT
 PyYAML
